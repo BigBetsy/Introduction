@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
 import os
 
 
-def main():
+def first_test():
     df = pd.read_csv('Tools/Titanic.csv', index_col='PassengerId')
-
     # print df['Sex'].value_counts()
     # print df.Survived.head()
     # print df.sort_values(['Survived'], ascending=True).head(1)
@@ -38,6 +38,28 @@ def main():
     create_answers('6', '%s' % female_frequently_name)
 
 
+def second_test():
+    df = pd.read_csv(
+        'Tools/Titanic.csv',
+        index_col='PassengerId',
+        usecols=['PassengerId', 'Pclass', 'Fare', 'Age', 'Sex', 'Survived']
+    )
+
+    # Age - replace empty by median depending on sex field
+    # data["AgeF"] = data.apply(lambda r: digest.ages[r["Sex"]] if pd.isnull(r["Age"]) else r["Age"], axis=1)
+
+    genders = {"male": 1, "female": 0}
+    df["Sex"] = df["Sex"].apply(lambda s: genders.get(s))
+    df.dropna(how='any')
+    x = df[['Pclass', 'Fare', 'Age', 'Sex']].values
+    y = df.Survived.values
+    model = DecisionTreeClassifier()
+    model.fit(x, y)
+    importances = model.feature_importances_
+    print importances
+
+
+
 def create_answers(answer_number, answer):
     answers_path = 'Answers'
     if not os.path.exists(answers_path):
@@ -47,4 +69,6 @@ def create_answers(answer_number, answer):
 
 
 if __name__ == '__main__':
-    main()
+
+    first_test()
+    second_test()
