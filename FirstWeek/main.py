@@ -50,14 +50,13 @@ def second_test():
 
     genders = {"male": 1, "female": 0}
     df["Sex"] = df["Sex"].apply(lambda s: genders.get(s))
-    df.dropna(how='any')
+    df = df.dropna(how='any')
     x = df[['Pclass', 'Fare', 'Age', 'Sex']].values
     y = df.Survived.values
     model = DecisionTreeClassifier()
     model.fit(x, y)
     importances = model.feature_importances_
     print importances
-
 
 
 def create_answers(answer_number, answer):
